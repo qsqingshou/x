@@ -1,0 +1,50 @@
+﻿{
+  "manifest_version": 3,
+  "name": "X-Assistant (X 触达助手)",
+  "version": "1.1.0",
+  "description": "基于 PRD v11 运营规范的 X 自动化触达工具。支持性别过滤、地区识别及严格风控配额。",
+  "permissions": [
+    "storage",
+    "tabs",
+    "alarms",
+    "scripting",
+    "activeTab",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://*.x.com/*",
+    "https://wy.llua.cn/*"
+  ],
+  "background": {
+    "service_worker": "bg.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/*"
+      ],
+      "js": [
+        "traditional-chinese-detector.js",
+        "content-human-mode.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icon.svg",
+        "vendor/remixicon/remixicon.css",
+        "vendor/remixicon/fonts/remixicon.woff2",
+        "vendor/remixicon/fonts/remixicon.woff",
+        "vendor/remixicon/fonts/remixicon.ttf"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

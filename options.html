@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>X 触达助手 - 配置后台</title>
+  <link href="vendor/remixicon/remixicon.css" rel="stylesheet">
+  <style>
+    :root {
+      /* 极简高级色板 */
+      --bg-page: #f5f5f7;
+      --bg-panel: #ffffff;
+      --line: #e5e5ea;
+      --text-main: #1d1d1f;
+      --text-sub: #86868b;
+      --brand: #000000;
+      --brand-hover: #333333;
+      --danger: #ff3b30;
+      --success: #34c759;
+      
+      /* 弥散阴影与圆角 */
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.03);
+      --shadow-btn: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --radius-sm: 8px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* 侧边栏 */
+    .sidebar {
+      width: 220px;
+      background: var(--bg-page);
+      display: flex;
+      flex-direction: column;
+      padding: 32px 16px;
+      border-right: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      margin-bottom: 32px;
+    }
+    
+    .sidebar-logo img {
+      border-radius: 8px;
+      box-shadow: var(--shadow-btn);
+    }
+    
+    .sidebar-logo span {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.2px;
+      color: var(--text-main);
+    }
+
+    .nav-item {
+      padding: 10px 14px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      color: var(--text-sub);
+      font-weight: 500;
+      font-size: 14px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .nav-item:hover { 
+      color: var(--text-main);
+      background: rgba(0,0,0,0.03);
+    }
+    
+    .nav-item.active {
+      background: var(--text-main);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: var(--shadow-btn);
+    }
+
+    .nav-item i { font-size: 18px; }
+
+    /* 主内容区 */
+    .main-content { 
+      flex: 1; 
+      overflow-y: auto; 
+      padding: 32px 48px; 
+    }
+    
+    .tab-content { 
+      display: none; 
+      max-width: 800px; 
+      margin: 0 auto; 
+      animation: fadeScale 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .tab-content.active { display: block; }
+
+    @keyframes fadeScale {
+      from { opacity: 0; transform: scale(0.99); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      margin-top: 0;
+      margin-bottom: 24px;
+    }
+    
+    /* 卡片体系 */
+    .card {
+      background: var(--bg-panel);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 0;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h2 i { 
+      font-size: 18px; 
+      color: var(--text-sub); 
+    }
+
+    /* 新增的统计徽标 UI */
+    .count-badge {
+      background: var(--bg-page);
+      color: var(--text-sub);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 99px;
+      border: 1px solid rgba(0,0,0,0.04);
+      margin-left: auto; /* 自动推到最右侧 */
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    }
+    
+    /* 表单与输入框 */
+    .row { 
+      display: flex; 
+      align-items: center; 
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    
+    .row:first-of-type { padding-top: 4px; }
+    
+    .row:last-child {
+      padding-bottom: 4px; border-bottom: none;
+    }
+    
+    .label { 
+      width: 160px; 
+      font-weight: 500; 
+      font-size: 14px; 
+      color: var(--text-main); 
+    }
+
+    input[type="number"], 
+    input[type="text"], 
+    textarea {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg-page);
+      color: var(--text-main);
+      transition: all 0.2s ease;
+    }
+    
+    input[type="number"] { max-width: 160px; }
+    
+    input:hover, textarea:hover { background: #eeeeee; }
+    
+    input:focus, textarea:focus { 
+      background: var(--bg-panel);
+      border-color: var(--line); 
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04); 
+    }
+    
+    textarea { 
+      width: 100%;
+      box-sizing: border-box;
+      height: 120px; 
+      line-height: 1.6; 
+      resize: vertical; 
+      display: block;
+    }
+
+    /* 优雅的开关 */
+    .switch-group { 
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; 
+    }
+    
+    .switch-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg-page); padding: 12px 14px;
+      border-radius: var(--radius-md); font-size: 14px; font-weight: 500;
+    }
+
+    input[type="checkbox"] {
+      -webkit-appearance: none; appearance: none;
+      width: 40px; height: 22px; background: #e5e5ea;
+      border-radius: 99px; position: relative; cursor: pointer;
+      outline: none; transition: 0.3s ease; margin: 0;
+    }
+
+    input[type="checkbox"]::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 18px; height: 18px; background: #ffffff;
+      border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+
+    input[type="checkbox"]:checked { background: var(--success); }
+    input[type="checkbox"]:checked::after { transform: translateX(18px); }
+    
+    /* 按钮：深色高级感 */
+    .btn-save {
+      background: var(--brand);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+      box-shadow: var(--shadow-btn);
+      transition: all 0.2s ease;
+      margin-top: 4px;
+    }
+    
+    .btn-save:hover { background: var(--brand-hover); transform: translateY(-1px); }
+    .btn-save:active { transform: scale(0.99); }
+
+    .btn-secondary {
+      background: var(--bg-panel); color: var(--text-main);
+      border: 1px solid var(--line); padding: 10px 16px;
+      border-radius: var(--radius-md); font-weight: 500;
+      cursor: pointer; font-size: 13px; transition: all 0.2s ease;
+      display: inline-flex; align-items: center; gap: 6px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    
+    .btn-secondary:hover { background: var(--bg-page); }
+    .btn-secondary:active { transform: scale(0.98); }
+
+    .action-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+
+    /* 数据与统计 */
+    .log-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+    
+    .stat-card {
+      background: var(--bg-panel); padding: 20px;
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-card);
+      border: 1px solid rgba(0,0,0,0.02); text-align: center;
+    }
+
+    .stat-val { font-size: 28px; font-weight: 600; letter-spacing: -0.5px; color: var(--text-main); line-height: 1.1; }
+    .stat-label { font-size: 12px; font-weight: 500; color: var(--text-sub); margin-top: 6px; }
+    
+    /* 表格 */
+    .log-table-wrapper { 
+      flex: 1; overflow-y: auto; background: var(--bg-panel); 
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-card);
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+    
+    .log-actions { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+    
+    .btn-clear-logs {
+      background: #ffffff;
+      color: var(--danger);
+      border: 1px solid rgba(255, 59, 48, 0.25);
+      padding: 6px 14px;
+      border-radius: 99px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-clear-logs:hover { 
+      background: rgba(255, 59, 48, 0.06); 
+      border-color: rgba(255, 59, 48, 0.5);
+    }
+    .btn-clear-logs:active { transform: scale(0.97); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      position: sticky; top: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+      text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--line);
+      color: var(--text-sub); font-weight: 500;
+    }
+    td { padding: 14px 16px; border-bottom: 1px solid var(--bg-page); color: var(--text-main); }
+    tbody tr:hover { background: var(--bg-page); }
+
+    .status-tag { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 500; }
+    .tag-success { background: #e2f7e7; color: #248a3d; }
+    .tag-fail { background: #ffeceb; color: #c42b1c; }
+    
+    /* 列表项 */
+    .list-item { 
+      display: flex; justify-content: space-between; align-items: center; 
+      padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 14px; 
+    }
+    .list-item:last-child { border-bottom: none; }
+    
+    .btn-remove { color: var(--text-sub); cursor: pointer; font-size: 16px; transition: 0.2s; }
+    .btn-remove:hover { color: var(--danger); }
+    
+    /* Toast */
+    .status-toast { 
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      background: var(--text-main); color: #fff; padding: 12px 24px; 
+      border-radius: 99px; font-size: 14px; font-weight: 500;
+      display: none; box-shadow: 0 8px 30px rgba(0,0,0,0.12); z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo">
+       <img src="icon-48.png" width="28" height="28" onerror="this.style.display='none'">
+       <span>X 触达助手</span>
+    </div>
+    <div class="nav-item active" data-tab="config"><i class="ri-settings-4-line" aria-hidden="true"></i><span>策略配置</span></div>
+    <div class="nav-item" data-tab="logs"><i class="ri-bar-chart-box-line" aria-hidden="true"></i><span>执行日志</span></div>
+    <div class="nav-item" data-tab="blacklist"><i class="ri-shield-user-line" aria-hidden="true"></i><span>黑名单管理</span></div>
+    <div class="nav-item" data-tab="sent"><i class="ri-check-double-line" aria-hidden="true"></i><span>已发名单</span></div>
+  </div>
+
+  <div class="main-content">
+    <div id="tab-config" class="tab-content active">
+      <h1>策略配置</h1>
+      
+      <div class="card">
+        <h2><i class="ri-equalizer-line" aria-hidden="true"></i><span>核心风控与配额</span></h2>
+        <div class="row">
+          <div class="label">每日私信上限</div>
+          <input type="number" id="dailyLimit" value="200">
+        </div>
+        <div class="row">
+          <div class="label">每小时操作上限</div>
+          <input type="number" id="hourlyLimit" value="50">
+        </div>
+          <div class="row">
+            <div class="label">累计操作后冷却</div>
+            <input type="number" id="opsBeforeCooldown" value="50">
+          </div>
+          <div class="row">
+            <div class="label">冷却时长(分钟)</div>
+            <input type="number" id="cooldownMinutes" value="5">
+          </div>
+        <div class="row">
+          <div class="label">评论互动窗口(天)</div>
+          <input type="number" id="commentWindow" value="3">
+        </div>
+        <div class="row">
+          <div class="label">粉丝采集上限</div>
+          <input type="number" id="followersLimit" value="50">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><i class="ri-filter-3-line" aria-hidden="true"></i><span>目标精准过滤</span></h2>
+        <div class="switch-group">
+          <div class="switch-item">
+            <span>启用性别过滤 (仅男性)</span>
+            <input type="checkbox" id="genderFilter">
+          </div>
+          <div class="switch-item">
+            <span>绕过重定向检测</span>
+            <input type="checkbox" id="bypassRedirect" checked>
+          </div>
+          <div class="switch-item">
+            <span>来源: 推文评论区</span>
+            <input type="checkbox" id="sourceComments" checked>
+          </div>
+          <div class="switch-item">
+            <span>来源: 博主粉丝列表</span>
+            <input type="checkbox" id="sourceFollowers" checked>
+          </div>
+        </div>
+        <div class="row" style="border:none; padding-bottom:0;">
+          <div class="label">地区白名单</div>
+          <input type="text" id="regionKeywords" placeholder="逗号分隔, 如: TW, 台湾, 台北">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><i class="ri-chat-1-line" aria-hidden="true"></i><span>私信文案库 (随机轮询)</span></h2>
+        <textarea id="dmTemplates" placeholder="每行一条文案..."></textarea>
+      </div>
+
+      <div class="card">
+        <h2><i class="ri-inbox-archive-line" aria-hidden="true"></i><span>数据备份</span></h2>
+        <div style="color: var(--text-sub); font-size: 13px; margin-bottom: 16px;">
+          仅导出与导入已发送名单和黑名单。导入时执行并集合并、小写归一与去重。
+        </div>
+        <div class="action-row">
+          <button class="btn-secondary" id="exportLists">导出 JSON</button>
+          <button class="btn-secondary" id="importLists">导入 JSON</button>
+          <input type="file" id="importListsFile" accept="application/json,.json,text/plain,.txt,text/csv,.csv" style="display:none;">
+        </div>
+      </div>
+
+      <button class="btn-save" id="save">保存并同步配置</button>
+    </div>
+
+    <div id="tab-logs" class="tab-content">
+      <h1>执行日志</h1>
+      <div class="log-stats">
+        <div class="stat-card">
+          <div class="stat-val" id="stat-total">0</div>
+          <div class="stat-label">发现目标</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="stat-success">0</div>
+          <div class="stat-label">发送成功</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="stat-ratio">0%</div>
+          <div class="stat-label">转化率</div>
+        </div>
+      </div>
+      <div class="log-actions">
+        <button id="clearLogs" class="btn-clear-logs"><i class="ri-delete-bin-line"></i> 清空日志</button>
+      </div>
+      <div class="log-table-wrapper">
+        <table id="logs-table">
+          <thead><tr><th>时间</th><th>账号</th><th>来源</th><th>状态</th><th>详情</th></tr></thead>
+          <tbody id="logItems"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-blacklist" class="tab-content">
+      <h1>黑名单管理</h1>
+      <div class="card">
+        <h2>
+          <i class="ri-shield-user-line" aria-hidden="true"></i><span>已拦截用户</span>
+          <span class="count-badge" id="blacklistCountUI">0</span>
+        </h2>
+        <div id="blacklistItems" style="max-height: 500px; overflow-y: auto; padding-right: 4px;"></div>
+      </div>
+    </div>
+
+    <div id="tab-sent" class="tab-content">
+      <h1>已发名单</h1>
+      <div class="card">
+        <h2>
+          <i class="ri-check-double-line" aria-hidden="true"></i><span>已发送记录</span>
+          <span class="count-badge" id="sentCountUI">0</span>
+        </h2>
+        <div id="sentItems" style="max-height: 500px; overflow-y: auto; padding-right: 4px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-toast" id="toast">配置已同步</div>
+  <script src="options.js"></script>
+</body>
+</html>

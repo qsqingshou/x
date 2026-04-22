@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>X-Assistant</title>
+    <link href="vendor/remixicon/remixicon.css" rel="stylesheet">
+    <style>
+      :root {
+        --bg: #ffffff;
+        --surface: #f5f5f7;
+        --text-main: #1d1d1f;
+        --text-sub: #86868b;
+        --brand: #000000;
+        --brand-hover: #333333;
+        --danger: #ff3b30;
+        --success: #34c759;
+      }
+      
+      * { box-sizing: border-box; }
+      
+      body {
+        width: 300px; 
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        background: var(--bg);
+        color: var(--text-main);
+        -webkit-font-smoothing: antialiased;
+        padding-bottom: 12px;
+      }
+      
+      /* 头部布局微调，容纳新按钮 */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: var(--bg);
+      }
+      
+      .header-title { display: flex; align-items: center; gap: 6px; }
+      .header-title i { font-size: 18px; color: var(--text-main); }
+      .header-title h3 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
+      
+      .header-actions { display: flex; align-items: center; gap: 8px; }
+
+      #status-badge { 
+        display: inline-flex; align-items: center; gap: 4px; 
+        font-size: 11px; font-weight: 500; 
+      }
+      #status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+      .status-idle { color: var(--text-sub); }
+      .status-idle::before { background: var(--text-sub); }
+      .status-running { color: var(--success); }
+      .status-running::before { background: var(--success); box-shadow: 0 0 6px rgba(52, 199, 89, 0.4); }
+      
+      /* 极简的图标按钮 */
+      .icon-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-sub);
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      }
+      .icon-btn:hover { background: var(--surface); color: var(--text-main); }
+      .icon-btn i { font-size: 15px; }
+
+      .content { padding: 0 16px; }
+      
+      /* 数据看板 */
+      .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+      .stat-card {
+        background: var(--surface);
+        padding: 12px;
+        border-radius: 12px;
+        text-align: center;
+      }
+      .stat-val { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; display: block; line-height: 1.1; }
+      .stat-label { font-size: 11px; color: var(--text-sub); font-weight: 500; margin-top: 4px; }
+      
+      /* 状态区域 */
+      .run-section {
+        padding: 12px 0;
+        margin-bottom: 16px;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+      }
+      .run-title { font-size: 11px; font-weight: 500; color: var(--text-sub); margin-bottom: 8px; }
+      .run-step { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+      .run-meta { 
+        font-size: 11px; color: var(--text-sub); line-height: 1.5; 
+        background: var(--surface); padding: 8px 10px; border-radius: 8px;
+        white-space: pre-line;
+      }
+
+      /* 按钮组 */
+      .btn-primary, .btn-ghost {
+        width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+        border-radius: 10px; font-size: 13px; font-weight: 600; padding: 10px; transition: 0.2s ease; border: none;
+      }
+      
+      .btn-primary { 
+        background: var(--brand); color: #fff; margin-bottom: 8px; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      .btn-primary:hover { background: var(--brand-hover); transform: translateY(-1px); }
+      .btn-primary:active { transform: scale(0.98); }
+      
+      #stop { background: var(--danger); box-shadow: 0 2px 8px rgba(255,59,48,0.2); }
+      #stop:hover { background: #d70015; }
+
+      .btn-ghost { background: var(--surface); color: var(--text-main); }
+      .btn-ghost:hover { background: #ebebeb; }
+      .btn-ghost:active { transform: scale(0.98); }
+      
+      .btn-primary:disabled, .btn-ghost:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+      .btn-primary i, .btn-ghost i { font-size: 15px; }
+
+      .license {
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 10px;
+        margin-bottom: 12px;
+      }
+      .license-title { font-size: 10px; font-weight: 600; color: var(--text-sub); margin-bottom: 6px; }
+      .license-row { display: flex; gap: 8px; }
+      .license-row input {
+        flex: 1;
+        border: 1px solid rgba(0,0,0,0.08);
+        background: var(--bg);
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 11px;
+        outline: none;
+      }
+      .license-row input:focus { border-color: rgba(0,0,0,0.18); }
+      .license-row button {
+        flex: none;
+        padding: 8px 10px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        background: var(--brand);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .license-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+      .license-meta { margin-top: 6px; font-size: 10px; line-height: 1.35; color: var(--text-sub); white-space: pre-line; }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-title">
+        <i class="ri-twitter-x-fill"></i>
+        <h3>X-Assistant</h3>
+      </div>
+      <div class="header-actions">
+        <div id="status-badge" class="status-idle">待命</div>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="license">
+        <div class="license-title">卡密验证</div>
+        <div class="license-row">
+          <input id="licenseKey" type="password" placeholder="请输入卡密" autocomplete="off" />
+          <button id="verifyLicense">验证</button>
+        </div>
+        <div class="license-meta" id="licenseMeta">状态：未验证</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-val" id="todayDMs">0</span>
+          <span class="stat-label">今日私信</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="todayOps">0</span>
+          <span class="stat-label">今日操作</span>
+        </div>
+      </div>
+
+      <div class="run-section">
+        <div class="run-title">实时状态</div>
+        <div class="run-step" id="runStep">等待启动</div>
+        <div class="run-meta" id="runMeta">队列：0
+队头：-
+状态：待命</div>
+      </div>
+      
+      <button id="start" class="btn-primary"><i class="ri-play-fill"></i> 启动全自动闭环</button>
+      <button id="stop" class="btn-primary" style="display:none;"><i class="ri-stop-mini-fill"></i> 终止执行</button>
+      <button id="openOptions" class="btn-ghost"><i class="ri-settings-4-line"></i> 策略配置</button>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
